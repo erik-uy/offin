@@ -1,6 +1,85 @@
 <template>
   <v-container bg fill-height grid-list-md text-xs-center>
-    home
+    <v-layout row wrap align-center>
+          <v-flex>
+
+
+
+            
+            <v-card
+              class="mx-auto offin"
+              color="#009ed7"
+              dark
+              max-width="600"
+            >
+              <v-list-item two-line>
+                <v-list-item-content>
+                  <v-list-item-title class="headline">Museum Station, Castlereagh St, Stand F</v-list-item-title>
+                  <v-list-item-subtitle>Illawarra Rd at Hill St, Marrickville</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-card-text>
+                <v-row align="center">
+                  <v-col class="display-3" cols="6">
+                    {{ minLeft }} minutes
+                  </v-col>
+                  <v-col class="display-3" cols="6" >
+
+                    <v-card light>
+                      <v-row >
+                        <v-col align="center">
+                          <v-icon size="62px">mdi-bus</v-icon> 423 
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                    
+                  </v-col>
+                </v-row>
+                
+                <v-row>
+                  <v-subheader>Arrives at {{ arrival | moment('h:mm:ss a') }} [{{ arrivalStatusText }}]</v-subheader>
+                </v-row>
+              </v-card-text>
+
+              <v-progress-linear
+                color="grey"
+                height="10"
+                value="78"
+                striped
+              ></v-progress-linear>
+              <v-divider></v-divider>
+
+              <v-card-actions>
+
+                <v-expansion-panels light>
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>Current Location</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <v-list class="transparent" collapse>
+                          <v-list-item
+                            v-for="item in forecast"
+                            :key="item.day"
+                          >
+                            <v-list-item-title>{{ item.day }}</v-list-item-title>
+
+                            <v-list-item-icon>
+                              <v-icon>{{ item.icon }}</v-icon>
+                            </v-list-item-icon>
+
+                            <v-list-item-subtitle class="text-right">
+                              {{ item.temp }}
+                            </v-list-item-subtitle>
+                          </v-list-item>
+                        </v-list>
+                        <vue-json-pretty :data="nextDeparture"></vue-json-pretty>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
   </v-container>
 </template>
 
@@ -12,7 +91,7 @@ export default {
   components: {
     VueJsonPretty
   },
-  name: 'home',
+  name: 'tripMonitor',
   data () {
       return {
         labels: ['SU', 'MO', 'TU', 'WED', 'TH', 'FR', 'SA'],
@@ -89,7 +168,7 @@ export default {
     },
     mounted() {
       function load(self){
-        //console.log(self);
+        console.log(self);
         let now = new Date(), 
           sdate = now.getFullYear() + (now.getMonth()+1).pad(2) +''+ now.getDate().pad(2),
           time= now.getHours().pad(2)+now.getMinutes().pad(2);
@@ -109,6 +188,16 @@ export default {
       }
       
 
+      var self = this;
+      load(self);
+      setInterval(function () {
+         console.log('updating ticker')
+         self.now = Date.now();
+      }, 6000);
+
+      setInterval(function () {
+         load(self)
+      }, 30000)
     },
 }
 </script>
