@@ -88,26 +88,6 @@ export default {
       },
     },
     mounted() {
-      function load(self){
-        //console.log(self);
-        let now = new Date(), 
-          sdate = now.getFullYear() + (now.getMonth()+1).pad(2) +''+ now.getDate().pad(2),
-          time= now.getHours().pad(2)+now.getMinutes().pad(2);
-
-        let qry = `/v1/tp/trip?TfNSWTR=true&outputFormat=rapidJSON&coordOutputFormat=EPSG%3A4326&depArrMacro=dep&itdDate=${sdate}&itdTime=${time}&type_origin=any&name_origin=10111065&type_destination=any&name_destination=10122537&calcNumberOfTrips=6&excludedMeans=checkbox&exclMOT_1=1&exclMOT_4=1&exclMOT_7=1&exclMOT_9=1&exclMOT_11=1&version=10.2.1.42`;
-
-        axios.get(
-          qry,
-          {
-            headers:{
-              'Authorization' : 'apikey fDHe0e8rguQmXsSYvNn04W4ROqJ8dLt3wIii'
-            }
-          }
-        )
-        .then(response => (self.info = response))
-        .then(self.setNextDeparture);
-      }
-      
 
     },
 }

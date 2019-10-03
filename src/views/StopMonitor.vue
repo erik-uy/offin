@@ -91,7 +91,7 @@ export default {
   components: {
     VueJsonPretty
   },
-  name: 'tripMonitor',
+  name: 'stopMonitor',
   data () {
       return {
         labels: ['SU', 'MO', 'TU', 'WED', 'TH', 'FR', 'SA'],

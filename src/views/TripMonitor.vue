@@ -14,10 +14,16 @@
             >
               <v-list-item two-line>
                 <v-list-item-content>
-                  <v-list-item-title class="headline">Museum Station, Castlereagh St, Stand F</v-list-item-title>
-                  <v-list-item-subtitle>Illawarra Rd at Hill St, Marrickville</v-list-item-subtitle>
+                  <v-list-item-title>
+                    <v-btn text class="text-truncate"><span class="text-truncate">Museum Station, Castlereagh St, Stand F asdf asdf asdf asdf asdf asdf</span></v-btn>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-btn text class="float-right" light >Illawarra Rd at Hill St, Marrickville</v-btn>
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+
+              <v-divider dark/>
 
               <v-card-text>
                 <v-row align="center">
@@ -62,22 +68,43 @@
                 striped
               ></v-progress-linear>
             </v-card>
+
+
+
+
           </v-flex>
         </v-layout>
+
+    <stop-finder v-bind:shown="departurePicker"></stop-finder>
+
+
+        <v-btn
+          color="red lighten-2"
+          dark
+          @click="departurePicker=!departurePicker"
+        >
+          Click Me
+        </v-btn>
+[[{{departurePicker}}]]
+
+
   </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import VueJsonPretty from 'vue-json-pretty'
+import StopFinder from '../components/StopFinder.vue'
 
 export default {
   components: {
-    VueJsonPretty
+    VueJsonPretty,
+    StopFinder,
   },
   name: 'tripMonitor',
   data () {
       return {
+        departurePicker:false,
         origin:'10111065',
         destination:'220456',
         labels: ['SU', 'MO', 'TU', 'WED', 'TH', 'FR', 'SA'],
@@ -137,6 +164,11 @@ export default {
         }catch(e){return ''};
       },
     },
+    timers: {
+      refreshProgress:  { time: 1000,   autostart: true,  repeat: true },
+      refreshData:      { time: 30000,  autostart: true,   repeat: true }
+    }, 
+
     methods:{
       setNextDeparture:function(){
         try{
@@ -173,10 +205,9 @@ export default {
           return this.nextDeparture;
         }catch(e){return {}};
       },
-    },
-    mounted() {
-      function load(self){
-        console.log(self);
+      refreshData:function(){
+        console.log('refresh data');
+        let self = this;
         let now = new Date(), 
           sdate = now.getFullYear() + (now.getMonth()+1).pad(2) +''+ now.getDate().pad(2),
           time= now.getHours().pad(2)+now.getMinutes().pad(2);
@@ -192,22 +223,20 @@ export default {
           }
         )
         .then(response => (self.info = response))
-        .then(self.setNextDeparture);
-      }
-      
-
-      var self = this;
-      load(self);
-      setInterval(function () {
-         console.log('updating ticker')
+        .then(self.setNextDeparture)
+        .then(function(){
+          self.progress=0;
+        });
+      },
+      refreshProgress:function(){
+        let self = this;
+        console.log('updating ticker')
          self.now = Date.now();
-         self.progress = (self.progress + (100/29) ) % 101;
-      }, 1000);
-
-      setInterval(function () {
-         load(self)
-         self.progress=0;
-      }, 30000)
+         if (self.progress<100) self.progress = (self.progress + (100/29) );
+      }
+    },
+    mounted() {
+      this.refreshData();
     },
 }
 </script>
