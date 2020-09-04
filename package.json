@@ -15,7 +15,7 @@
     "roboto-fontface": "*",
     "vue": "^2.6.10",
     "vue-json-pretty": "^1.6.2",
-    "vue-moment": "^4.0.0",
+    "vue-moment": "^4.1.0",
     "vue-router": "^3.0.3",
     "vue-timers": "^2.0.4",
     "vuetify": "^2.0.0",
